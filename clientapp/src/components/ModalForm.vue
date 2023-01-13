@@ -2,23 +2,56 @@
 import agent from '../api/agent';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
+import { useVuelidate } from '@vuelidate/core'
+import { required, maxLength, between, integer, numeric } from '@vuelidate/validators'
 
 export default {
-  props: 
-  ['show', 
-    'item'],
+  props:
+    ['show',
+      'inItem'],
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
+      item: {
+        title: '',
+        director: '',
+        year: 2000,
+        rate: 0
+      }
     }
   },
+  validations() {
+    return {
+      item: {
+        title: {
+          required,
+          maxLength: maxLength(200),
+        },
+        director: {
+          maxLength: maxLength(200),
+        },
+        year: {
+          required,
+          integer,
+          between: between(1900, 2200),
+        },
+        rate: {
+          numeric, 
+          between: between(0, 10),
+        }
+      }
+    }
+  },
+
   methods: {
-    submit(){
-      if(this.item.hasOwnProperty('id'))
-      {
+    async submit() {
+      const isFormCorrect = await this.v$.$validate();
+      if (!isFormCorrect) return;
+
+      if (this.item.hasOwnProperty('id')) {
         this.$emit('edit', this.item);
       }
-      else
-      {
+      else {
         this.$emit('create', this.item);
       }
       this.$emit('close');
@@ -27,6 +60,12 @@ export default {
   computed: {
     returnHeader() {
       return this.item.hasOwnProperty('id') ? 'Edit movie' : 'Create new movie'
+    },
+  },
+  watch: {
+    show() {
+      this.v$.$reset();
+      this.item = { ... this.inItem };
     }
   }
 }
@@ -38,20 +77,41 @@ export default {
       <div class="modal-container">
         <h3 class="text-center">{{ returnHeader }}</h3>
         <div class="form-floating mb-2">
-          <input type="text" class="form-control" id="titleInput" placeholder="title" v-model="item.title">
+          <input type="text" v-bind:class="['form-control', v$.item.title.$error ? 'is-invalid' : '']" id="titleInput"
+            placeholder="title" v-model="v$.item.title.$model">
           <label for="titleInput">Title</label>
+          <div class="invalid-feedback">
+            <p v-for="error of v$.item.title.$errors" :key="error.$uid">
+              {{ error.$message }}
+            </p>
+          </div>
         </div>
         <div class="form-floating mb-2">
-          <input type="text" class="form-control" id="directorInput" placeholder="director" v-model="item.director">
+          <input type="text" v-bind:class="['form-control', v$.item.director.$error ? 'is-invalid' : '']" id="directorInput" placeholder="director" v-model="v$.item.director.$model">
           <label for="directorInput">Director</label>
+          <div class="invalid-feedback">
+            <p v-for="error of v$.item.director.$errors" :key="error.$uid">
+              {{ error.$message }}
+            </p>
+          </div>
         </div>
         <div class="form-floating mb-2">
-          <input type="text" class="form-control" id="yearInput" placeholder="year" v-model="item.year">
+          <input type="text" v-bind:class="['form-control', v$.item.year.$error ? 'is-invalid' : '']" id="yearInput" placeholder="year" v-model="v$.item.year.$model">
           <label for="yearInput">Year</label>
+          <div class="invalid-feedback">
+            <p v-for="error of v$.item.year.$errors" :key="error.$uid">
+              {{ error.$message }}
+            </p>
+          </div>
         </div>
         <div class="form-floating mb-2">
-          <input type="text" class="form-control" id="rateInput" placeholder="rate" v-model="item.rate">
+          <input type="text" v-bind:class="['form-control', v$.item.rate.$error ? 'is-invalid' : '']" id="rateInput" placeholder="rate" v-model="item.rate">
           <label for="rateInput">Rate</label>
+          <div class="invalid-feedback">
+            <p v-for="error of v$.item.rate.$errors" :key="error.$uid">
+              {{ error.$message }}
+            </p>
+          </div>
         </div>
         <button type="button" class="btn btn-primary float-start" @click="submit">Submit</button>
         <button type="button" class="btn btn-secondary float-end" @click="$emit('close')">Close</button>

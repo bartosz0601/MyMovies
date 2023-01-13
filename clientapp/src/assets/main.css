@@ -1,13 +1,11 @@
-@import './base.css';
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
+  max-width: 768px;
+  margin: 0px auto;
   font-weight: normal;
 }
 /*
+@import './base.css';
 a,
 .green {
   text-decoration: none;
