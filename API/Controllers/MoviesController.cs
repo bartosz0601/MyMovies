@@ -1,4 +1,6 @@
-﻿using Domain;
+﻿using Application.Movies;
+using Domain;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -9,38 +11,51 @@ namespace API.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly IMediator _mediator;
 
-        public MoviesController(DataContext context)
+        public MoviesController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Movie>>> Get()
+        public async Task<ActionResult> Get()
         {
-            return await _context.Movies.ToListAsync();
+            var result = await _mediator.Send(new List.Query());
+            if (result == null) return NotFound();     
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Movie>> Get(Guid id)
+        public async Task<ActionResult> Get(Guid id)
         {
-            return await _context.Movies.FindAsync(id);
+            var result = await _mediator.Send(new Get.Query { Id = id });
+            if (result == null) return NotFound();
+            return Ok(result);
         }
 
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] Movie movie)
         {
+            var result = await _mediator.Send(new Create.Command { Movie = movie });
+            if (result == null) return BadRequest("Failed to create a movie");
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Edit(Guid id, [FromBody] Movie movie)
         {
+            var result = await _mediator.Send(new Edit.Command { Movie = movie });
+            if (result == null) return BadRequest("Failed to edit a movie");
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(Guid id)
         {
+            var result = await _mediator.Send(new Delete.Command { Id = id });
+            if(!result) return NotFound();
+            return NoContent();
         }
     }
 }

@@ -1,3 +1,6 @@
+using Application.Core;
+using Application.Movies;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -13,6 +16,8 @@ builder.Services.AddDbContext<DataContext>(opt =>
 {
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddMediatR(typeof(List.Handler));
+builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
 var app = builder.Build();
 
@@ -34,6 +39,7 @@ try
 {
     var context = services.GetRequiredService<DataContext>();
     context.Database.Migrate();
+    await Seed.SeedData(context);
 }
 catch (Exception ex)
 {
