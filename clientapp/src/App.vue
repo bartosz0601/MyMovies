@@ -1,6 +1,5 @@
 <script>
 import agent from './api/agent';
-import MoviesHeader from './components/MoviesHeader.vue';
 import Toast from './components/Toast.vue';
 import MoviesItem from './components/MoviesItem.vue';
 import ModalForm from './components/ModalForm.vue';
@@ -23,7 +22,8 @@ export default {
       showModalDelete: false,
       choosenItem: {},
       errorMessage: '',
-      showToast: false
+      showToast: false, 
+      loadIndicatorExternal: false
     }
   },
   methods: {
@@ -66,18 +66,26 @@ export default {
         this.showError(e);
       }
     },
-    showError(e){
+    async getExternalApi() {
+      try {
+        this.loadIndicatorExternal = true;
+        this.movies = await agent.Movies.getExternalApi();
+        this.loadIndicatorExternal = false;
+      } catch (e) {
+        this.showError(e);
+        this.loadIndicatorExternal = false;
+      }
+    },
+    showError(e) {
       this.errorMessage = e;
       this.showToast = !this.showToast;
     }
-
   },
   async mounted() {
     try {
       this.movies = await agent.Movies.getList();
     } catch (e) {
-      this.errorMessage = e;
-      this.show = !this.show;
+      this.showError(e);
     }
   },
 }
@@ -90,6 +98,11 @@ export default {
   <div class="container mt-2">
     <div>
       <button class="btn btn-primary mb-2" @click="initItem">Add new</button>
+      <button v-bind:class="['btn btn-primary mb-2 mx-2', loadIndicatorExternal ? 'disabled' : '']" @click="getExternalApi">
+        <span v-if="loadIndicatorExternal" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Load movies
+      </button>
+
     </div>
     <Teleport to="body">
       <ModalForm v-bind:show="showModalMovie" v-bind:inItem="choosenItem" @close="showModalMovie = false"
@@ -98,8 +111,11 @@ export default {
         @remove="removeMovie" />
     </Teleport>
     <div>
-      <MoviesItem v-if="movies != undefined" v-for="item in movies" v-bind:key="item.id" v-bind:item="item"
+      <MoviesItem v-if="movies.length > 0" v-for="item in movies" v-bind:key="item.id" v-bind:item="item"
         @editClicked="editItemClicked" @removeClicked="removeItemClicked" />
+      <p v-else>
+        Click add movie or Load movies form external API
+      </p>
     </div>
   </div>
 </template>

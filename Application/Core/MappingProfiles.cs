@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Application.ExternalAPI;
+using AutoMapper;
 using Domain;
 
 namespace Application.Core
@@ -8,6 +9,8 @@ namespace Application.Core
         public MappingProfiles()
         {
             CreateMap<Movie, Movie>();
-        }
+            CreateMap<MovieDTO, Movie>().
+                ForMember(m => m.Id, d => d.MapFrom(x => Guid.NewGuid()));
+        } 
     }
 }

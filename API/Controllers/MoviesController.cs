@@ -34,6 +34,14 @@ namespace API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("externalapi")]
+        public async Task<ActionResult> GetExternalApi()
+        {
+            var result = await _mediator.Send(new GetExternalAPI.Query());
+            if (result == null) return BadRequest("Failed to connect to external api");
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] Movie movie)
         {

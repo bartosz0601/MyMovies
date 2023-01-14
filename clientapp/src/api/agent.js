@@ -34,7 +34,8 @@ const Movies = {
     getList: () => axios.get('/movies/').then(responseBody),
     post: (movie) => axios.post('/movies/', movie).then(responseBody),
     put: (movie) => axios.put('/movies/' + movie.id, movie).then(responseBody),
-    delete: (id) => axios.delete('/movies/' + id).then(responseBody)
+    delete: (id) => axios.delete('/movies/' + id).then(responseBody),
+    getExternalApi: () => axios.get('/movies/externalapi').then(responseBody),
 }
 
 const agent = {

@@ -1,4 +1,5 @@
 using Application.Core;
+using Application.ExternalAPI;
 using Application.Movies;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<DataContext>(opt =>
 });
 builder.Services.AddMediatR(typeof(List.Handler));
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+builder.Services.AddSingleton<IMovieExternalAPI, MovieExternalAPI>();
 
 var app = builder.Build();
 
