@@ -37,15 +37,19 @@ namespace Application.Movies
                 {
                     return null;
                 }
-                
+
+                var listNewMovie = new List<Movie>();
+
                 foreach (var movieDTO in listMovieDTO)
                 {
                     if (await _context.Movies.AnyAsync(m => m.Title == movieDTO.Title)) continue;
-                    await _context.AddAsync(_mapper.Map<Movie>(movieDTO));
+                    listNewMovie.Add(_mapper.Map<Movie>(movieDTO));
                 }
+
+                await _context.AddRangeAsync(listNewMovie);
                 await _context.SaveChangesAsync();
 
-                return await _context.Movies.ToListAsync();
+                return listNewMovie;
             }
         }
     }

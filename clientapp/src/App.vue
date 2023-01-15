@@ -69,8 +69,8 @@ export default {
     async getExternalApi() {
       try {
         this.loadIndicatorExternal = true;
-        this.movies = await agent.Movies.getExternalApi();
-        this.loadIndicatorExternal = false;
+        this.movies.push(...await agent.Movies.getExternalApi());
+        this.loadIndicatorExternal = false
       } catch (e) {
         this.showError(e);
         this.loadIndicatorExternal = false;
@@ -114,7 +114,7 @@ export default {
       <MoviesItem v-if="movies.length > 0" v-for="item in movies" v-bind:key="item.id" v-bind:item="item"
         @editClicked="editItemClicked" @removeClicked="removeItemClicked" />
       <p v-else>
-        Click add movie or Load movies form external API
+        Click add movie or load movies form external API
       </p>
     </div>
   </div>

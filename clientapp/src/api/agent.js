@@ -15,14 +15,14 @@ axios.interceptors.response.use((response) => response,
                 }
                 else
                 {
-                    message = 'bad request'
+                    message = 'Bad request'
                 }
                 break;
             case 404 === status:
-                message = 'not found';
+                message = 'Not found';
                 break;
             case 500 >= status:
-                message = 'server error';
+                message = 'Server error';
                 break;
         }
         return Promise.reject(message);
