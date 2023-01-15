@@ -7,10 +7,12 @@ Web application for managing movies.
 ## Setup
 To run API project(server):
 ```
+$ cd ..\mymovies\api
 $ dotnet run
 ```
 To run clientapp(webapp):
 ```
+$ cd ..\mymovies\clientapp
 $ npm install
 $ npm run dev
 ```
