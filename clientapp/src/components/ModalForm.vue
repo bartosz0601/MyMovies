@@ -19,8 +19,8 @@ export default {
       item: {
         title: "",
         director: "",
-        year: "",
-        rate: "",
+        year: 2000,
+        rate: 0,
       },
     };
   },
@@ -53,7 +53,7 @@ export default {
       if (!isFormCorrect) return;
 
       if(!this.item.rate){
-        this.item.rate = null;
+        this.item.rate = 0;
       }
 
       if (this.hasId) {
