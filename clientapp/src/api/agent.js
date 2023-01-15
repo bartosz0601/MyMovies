@@ -1,45 +1,33 @@
 import axios from "axios";
 
-axios.defaults.baseURL = '/api';
+axios.defaults.baseURL = "/api";
 
-const responseBody = (response) => response.data;
-
-axios.interceptors.response.use((response) => response, 
-    (error) => {
-        let message = "";
-        const {status, data} = error.response;
-        switch (true) {
-            case 400 === status:
-                if (typeof data === 'string' ) {
-                    message = data;
-                }
-                else
-                {
-                    message = 'Bad request'
-                }
-                break;
-            case 404 === status:
-                message = 'Not found';
-                break;
-            case 500 >= status:
-                message = 'Server error';
-                break;
-        }
-        return Promise.reject(message);
+axios.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    let message = "";
+    const {data, statusText, status } = error.response; 
+    if (typeof data === "string" && status === 400) {
+      message = data;
+    } else {
+      message = statusText;
     }
-)
+    return Promise.reject(message);
+  }
+);
 
+const moviesUrl = "/movies/";
 const Movies = {
-    get: (id) => axios.get('/movies/' + id).then(responseBody),
-    getList: () => axios.get('/movies/').then(responseBody),
-    post: (movie) => axios.post('/movies/', movie).then(responseBody),
-    put: (movie) => axios.put('/movies/' + movie.id, movie).then(responseBody),
-    delete: (id) => axios.delete('/movies/' + id).then(responseBody),
-    getExternalApi: () => axios.get('/movies/externalapi').then(responseBody),
-}
+  get: (id) => axios.get(moviesUrl + id),
+  getList: () => axios.get(moviesUrl),
+  post: (movie) => axios.post(moviesUrl, movie),
+  put: (movie) => axios.put(moviesUrl + movie.id, movie),
+  delete: (id) => axios.delete(moviesUrl + id),
+  getExternalApi: () => axios.get(moviesUrl + "externalapi"),
+};
 
 const agent = {
-    Movies, 
-}
+  Movies,
+};
 
 export default agent;

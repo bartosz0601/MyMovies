@@ -47,7 +47,8 @@ namespace API.Controllers
         {
             var result = await _mediator.Send(new Create.Command { Movie = movie });
             if (result == null) return BadRequest("Failed to create a movie");
-            return Ok(result);
+            return CreatedAtAction(nameof(Get),
+                new { id = result.Id }, result);
         }
 
         [HttpPut("{id}")]
