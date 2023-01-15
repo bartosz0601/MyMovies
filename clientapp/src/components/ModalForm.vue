@@ -52,6 +52,10 @@ export default {
       const isFormCorrect = await this.v$.$validate();
       if (!isFormCorrect) return;
 
+      if(!this.item.rate){
+        this.item.rate = 0;
+      }
+
       if (this.hasId) {
         this.$emit("edit", this.item);
       } else {
