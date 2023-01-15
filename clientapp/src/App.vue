@@ -4,7 +4,6 @@ import Toast from "./components/Toast.vue";
 import MoviesItem from "./components/MoviesItem.vue";
 import ModalForm from "./components/ModalForm.vue";
 import ModalDelete from "./components/ModalDelete.vue";
-import { v4 as uuidv4 } from "uuid";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 
@@ -41,7 +40,6 @@ export default {
     },
     async createMovie(item) {
       try {
-        //item.id = uuidv4();
         const newItem = await agent.Movies.post(item);
         this.showModalMovie = false;
         this.movies.push(newItem);
