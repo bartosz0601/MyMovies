@@ -19,8 +19,8 @@ export default {
       item: {
         title: "",
         director: "",
-        year: 2000,
-        rate: 0,
+        year: "",
+        rate: "",
       },
     };
   },
@@ -51,6 +51,10 @@ export default {
     async submit() {
       const isFormCorrect = await this.v$.$validate();
       if (!isFormCorrect) return;
+
+      if(!this.item.rate){
+        this.item.rate = null;
+      }
 
       if (this.hasId) {
         this.$emit("edit", this.item);

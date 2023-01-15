@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     initItem() {
-      this.choosenItem = { title: "", director: "", year: 0, rate: 0 };
+      this.choosenItem = { title: "", director: "", year: "", rate: ""};
       this.showModalMovie = true;
     },
     editItemClicked(id) {
