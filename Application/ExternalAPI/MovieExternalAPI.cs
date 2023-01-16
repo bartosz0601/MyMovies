@@ -20,15 +20,15 @@ namespace Application.ExternalAPI
             };
         }
 
-        public async Task<List<MovieDTO>> GetMovies()
+        public async Task<List<MovieExtDTO>> GetMovies(CancellationToken ct)
         {
             var url = "/MyMovies";
-            var result = new List<MovieDTO>();
-            var response = await client.GetAsync(url);
+            var result = new List<MovieExtDTO>();
+            var response = await client.GetAsync(url, ct);
             if (response.IsSuccessStatusCode)
             {
-                var stringResponse = await response.Content.ReadAsStringAsync();
-                result = JsonSerializer.Deserialize<List<MovieDTO>>(stringResponse,
+                var stringResponse = await response.Content.ReadAsStringAsync(ct);
+                result = JsonSerializer.Deserialize<List<MovieExtDTO>>(stringResponse,
                     new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
             }
             else

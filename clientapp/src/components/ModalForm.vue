@@ -19,8 +19,8 @@ export default {
       item: {
         title: "",
         director: "",
-        year: 2000,
-        rate: 0,
+        year: "",
+        rate: "",
       },
     };
   },
@@ -52,8 +52,8 @@ export default {
       const isFormCorrect = await this.v$.$validate();
       if (!isFormCorrect) return;
 
-      if(!this.item.rate){
-        this.item.rate = 0;
+      if (!this.item.rate) {
+        this.item.rate = null;
       }
 
       if (this.hasId) {
@@ -160,7 +160,10 @@ export default {
           </div>
           <button
             type="submit"
-            class="btn btn-primary float-start"
+            v-bind:class="[
+              'btn btn-primary mb-2 mx-2',
+              !v$.$anyDirty ? 'disabled' : '',
+            ]"
             @click.prevent="submit"
           >
             Submit

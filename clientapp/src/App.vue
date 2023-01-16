@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     initItem() {
-      this.choosenItem = { title: "", director: "", year: "", rate: ""};
+      this.choosenItem = {title: "", director: "", year: "", rate: ""};
       this.showModalMovie = true;
     },
     editItemClicked(id) {
@@ -40,6 +40,7 @@ export default {
     },
     async createMovie(item) {
       try {
+        console.log(item);
         const newItem = await agent.Movies.post(item);
         this.showModalMovie = false;
         this.movies.push(newItem);

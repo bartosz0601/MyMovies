@@ -2,8 +2,6 @@
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Persistence;
 
 namespace API.Controllers
 {
@@ -35,9 +33,9 @@ namespace API.Controllers
         }
 
         [HttpGet("externalapi")]
-        public async Task<ActionResult> GetExternalApi()
+        public async Task<ActionResult> GetExternalApi(CancellationToken ct)
         {
-            var result = await _mediator.Send(new GetExternalAPI.Query());
+            var result = await _mediator.Send(new GetExternalAPI.Query(), ct);
             if (result == null) return BadRequest("Failed to connect to external api");
             return Ok(result);
         }

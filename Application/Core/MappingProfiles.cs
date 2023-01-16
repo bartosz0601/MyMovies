@@ -9,7 +9,7 @@ namespace Application.Core
         public MappingProfiles()
         {
             CreateMap<Movie, Movie>();
-            CreateMap<MovieDTO, Movie>().
+            CreateMap<MovieExtDTO, Movie>().
                 ForMember(m => m.Id, d => d.MapFrom(x => Guid.NewGuid()));
         } 
     }

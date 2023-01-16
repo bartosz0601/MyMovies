@@ -14,6 +14,7 @@ namespace Application.Movies
         public class Handler : IRequestHandler<Command, Movie>
         {
             private readonly DataContext _context;
+
             public Handler(DataContext context)
             {
                 _context = context;
@@ -25,7 +26,7 @@ namespace Application.Movies
                 {
                     return null;
                 }
-                request.Movie.Id= Guid.NewGuid();
+                request.Movie.Id = Guid.NewGuid();
                 await _context.Movies.AddAsync(request.Movie);
                 var result = await _context.SaveChangesAsync() > 0;
                 if (!result) return null;

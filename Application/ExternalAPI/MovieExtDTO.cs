@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.ExternalAPI
 {
-    public class MovieDTO
+    public class MovieExtDTO
     {
         public int Id { get; set; }
         public string Title { get; set; }

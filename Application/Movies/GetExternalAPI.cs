@@ -28,10 +28,10 @@ namespace Application.Movies
 
             public async Task<List<Movie>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var listMovieDTO = new List<MovieDTO>();
+                var listMovieDTO = new List<MovieExtDTO>();
                 try
                 {
-                    listMovieDTO = await _movieExternalAPI.GetMovies();
+                    listMovieDTO = await _movieExternalAPI.GetMovies(cancellationToken);
                 }
                 catch (HttpRequestException)
                 {

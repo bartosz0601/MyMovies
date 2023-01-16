@@ -22,7 +22,7 @@ export default {
       <p class="card-text">
         {{ item.year }}
         {{ item.director }}
-        <i class="bi bi-star"></i> {{ item.rate }}
+        <i v-if="item.rate" class="bi bi-star"></i> {{ item.rate }}
       </p>
       <button type="button" class="btn btn-primary" @click="editItem">
         Edit
